@@ -1,5 +1,8 @@
 #include "Render.h"
 
+#define TINYOBJLOADER_IMPLEMENTATION
+#include "TinyObjectLoader/tiny_obj_loader.h"
+
 #define STB_IMAGE_IMPLEMENTATION
 #include "STB/stb_image.h"
 #include "GLM/ext.hpp"
@@ -28,7 +31,9 @@ geometry makeGeometry(vertex * verts, size_t vertCount, unsigned int * indices, 
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(vertex), (void*)0);
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(vertex), (void*)16);
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(vertex), (void*)16);
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(vertex), (void*)32);
 
 	//unbind buffers
 	glBindVertexArray(0);
@@ -157,6 +162,11 @@ void draw(const shader & shad, const geometry & geo)
 void setUniform(const shader & shade, GLuint location, const glm::mat4 & value)
 {
 	glProgramUniformMatrix4fv(shade.program, location, 1, GL_FALSE, glm::value_ptr(value));
+}
+
+void setUniform(const shader & shade, GLuint location, const glm::vec3 & value)
+{
+	glProgramUniform3fv(shade.program, location, 1, glm::value_ptr(value));
 }
 
 void setUniform(const shader & shad, GLuint locations, const texture & value, GLuint textureSlot)
